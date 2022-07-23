@@ -8,6 +8,7 @@ from . models import Employee
 from . models import Attendance
 from django import forms
 from django.contrib import messages
+from . models import Designation
 
 
 class CsvImportForm(forms.Form):
@@ -51,6 +52,7 @@ class AttendanceAdmin(admin.ModelAdmin):
 admin.site.site_header = 'Pay-Roll Management'
 admin.site.register(Employee)
 admin.site.register(Attendance, AttendanceAdmin)
+admin.site.register(Designation)
 
  
 
