@@ -19,9 +19,13 @@ from django.views import View
 from rest_framework.urlpatterns import format_suffix_patterns
 from pay import urls, views
 from pay.models import Attendance
+from pay.views import GeneratePdf
+
+
 
 #URL Config
 urlpatterns = [
     re_path(r'^admin/', admin.site.urls),
     re_path(r'^employees/', views.employeeList.as_view()),
+    re_path('pdf/', GeneratePdf.as_view()),
 ]

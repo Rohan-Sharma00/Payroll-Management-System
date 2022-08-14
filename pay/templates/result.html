@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pay Slip</title>
+</head>
+<style>
+  html {
+    font-size: 14px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid black;
+  }
+
+  table td {
+    line-height: 25px;
+    padding-left: 15px;
+  }
+
+  table th {
+    background-color: white;
+    color: #363636;
+  }
+
+  .pay {
+    background-color: wheat;
+  }
+</style>
+
+<body>
+  <table border="1" width="100%" cellspacing="0" cellpadding="6">
+    <tr>
+      <th colspan='4' style="vertical-align: middle;" class="pay">
+        <h1 style="font-size:20px;">Pay Slip For {{ data.salaryMonth }}</h1>
+      </th>
+    </tr>
+    <tr>
+      <th colspan="2" style=" background-color: white;">Employee Name</th>
+      <td colspan='2'>{{ data.employee.first_Name }} {{ data.employee.last_Name }}</td>
+    </tr>
+    <tr>
+      <th class="pay">EmployeeId</th>
+      <td>{{data.employee.id}}</td>
+      <th class="pay">Employee Email</th>
+      <td style="width: 250px;">{{data.employee.email_Address}}</td>
+    </tr>
+    <tr>
+      <th class="pay">Contact Number</th>
+      <td>{{data.employee.contact_Number}}</td>
+      <th class="pay">PAN Number</th>
+      <td>{{data.employee.pAN_Number}}</td>
+    </tr>
+    <tr>
+      <th class="pay">Monthly Gross</th>
+      <td>{{ data.totalSalaryWithoutTax }}</td>
+      <th class="pay">Monthly Basic</th>
+      <td>{{ data.employee.designation.basic_Salary }}</td>
+    </tr>
+    <tr>
+      <th class="pay">Days In Month</th>
+      <td>{{ data.workingDay.days_In_Month }}</td>
+      <th class="pay">Days Payable</th>
+      <td>{{ data.total_Salary_Days }}</td>
+    </tr>
+    <tr>
+      <th class="pay">Bank Name</th>
+      <td>{{ data.employee.bank_Name }}</td>
+      <th class="pay">Bank A/c No.</th>
+      <td>{{ data.employee.account_Number }}</td>
+    </tr>
+    <tr>
+      <th colspan='4' style="background-color: white;"><h1></h1></th>
+    </tr>
+    <tr>
+      <th class="pay">Earning Head</th>
+      <td class="pay">Current Month Earning</td>
+      <th class="pay">Detetction Head</th>
+      <td class="pay">Current Month Detetction</td>
+    </tr>
+    <tr>
+      <th class="pay">Base</th>
+      <td style="text-align: right;">{{ data.employee.designation.basic_Salary }}</td>
+      <th class="pay">Provident Fund</th>
+      <td style="text-align: right">{{ data.employee.provident_Fund }}</td>
+    </tr>
+    <tr>
+      <th class="pay">House Rent Allowences</th>
+      <td style="text-align: right;">{{ data.employee.house_Rent_Allowance }}</td>
+      <th class="pay">Professional Tax</th>
+      <td style="text-align: right;">{{ data.employee.tax }}</td>
+    </tr>
+    <tr>
+      <th class="pay">Conveyance Allowences</th>
+      <td style="text-align: right;">{{ data.employee.conveyance_Allowances }}</td>
+      <th style="text-align: right;background-color: white;"><th style="text-align: right;background-color: white;color: white;">Totals</th></th>
+    </tr>
+    <tr>
+      <th class="pay">Other Allowances</th>
+      <td style="text-align: right;">{{ data.employee.allowances }}</td>
+      <th style="text-align: right;background-color: white;"><th style="text-align: right;background-color: white; color: white;">h</th></th>
+    </tr>
+    <tr>
+      <th style="text-align: right;" class="pay">Totals</th>
+      <td style="text-align: right;">{{ data.totalSalaryWithoutTax }}</td>
+      <th style="text-align: right;background-color: white;"><th style="text-align: right;background-color: white;">{{ data.totalTax }}</th></th>
+    </tr>
+    <tr>
+      <th style="text-align: right;" class="pay">NET PAY</th>
+      <td colspan="3" style="text-align: middle;">{{ data.totalNetPay }}</td>
+    </tr>
+  </table>
+</body>
+
+</html>
