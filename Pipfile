@@ -12,6 +12,8 @@ xhtml2pdf = "*"
 opencv-python = "*"
 qrcode = "*"
 numpy = "*"
+django-jazzmin = "*"
+secure-smtplib = "*"
 
 [dev-packages]
 autopep8 = "*"

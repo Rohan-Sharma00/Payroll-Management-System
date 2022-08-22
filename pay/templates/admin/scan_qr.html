@@ -1,0 +1,49 @@
+{% extends 'admin/base_site.html' %}
+{% load static %}
+{% block content %}
+<script src="{% static '/html5-qrcode.min.js' %}"></script>
+<style>
+  .result {
+    background-color: green;
+    color: #fff;
+    padding: 20px;
+  }
+
+  .row {
+    display: flex;
+  }
+
+  .center-align {
+    margin: auto;
+    width: 30%;
+    padding: 150px;
+  }
+</style>
+
+
+<div class="row">
+  <div class="col center-align">
+    <div style="width: 500px;" id="reader"></div>
+  </div>
+  <div class="col" style="margin-top:10%;margin-right:20%">
+    <h2>SCAN RESULT</h2><br>
+    <div id="result">Result Here</div><br>
+  </div>
+</div>
+
+
+<script type="text/javascript">
+  function onScanSuccess(qrCodeMessage) {
+    document.getElementById('result').innerHTML = '<span class="result">' + qrCodeMessage + '</span>';
+  }
+
+  function onScanError(errorMessage) {
+    //handle scan error
+  }
+
+  var html5QrcodeScanner = new Html5QrcodeScanner(
+    "reader", { fps: 10, qrbox: 250 });
+  html5QrcodeScanner.render(onScanSuccess, onScanError);
+
+</script>
+{% endblock %}

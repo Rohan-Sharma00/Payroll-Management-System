@@ -32,7 +32,7 @@ class GeneratePdf(View):
         data = Salary.objects.get(pk=request.GET['id'])
         print('---------------')
         print(data.employee.first_Name)
-        data.salaryMonth = calendar.month_name[data.workingDay.month] + ' ' + str(data.workingDay.year)
+        data.salaryMonth = calendar.month_name[int(data.workingDay.month)] + ' ' + str(data.workingDay.year)
         data.totalSalaryWithoutTax = data.employee.gross_Salary
         data.totalTax = data.employee.tax + data.employee.provident_Fund
         data.totalNetPay = data.salary
