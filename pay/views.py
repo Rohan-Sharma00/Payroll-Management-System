@@ -1,5 +1,9 @@
 import calendar
+from email import message
 from django.shortcuts import render
+import smtplib
+from email.message import EmailMessage
+from django.core.mail import send_mail
 
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
@@ -11,10 +15,14 @@ from . models import Salary
 from . serializers import employeeSerializers
 # Added new lib from here
 from django.views.generic import View
-from .process import html_to_pdf 
+from .process import html_to_pdf
 from django.template.loader import render_to_string
 from django.template import loader
 
+from io import BytesIO
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+from django.core.mail import EmailMultiAlternatives
 
 
 class employeeList(APIView):
@@ -23,25 +31,57 @@ class employeeList(APIView):
         employees = Employee.objects.all()
         serializer = employeeSerializers(employees, many=True)
         return Response(serializer.data)
+
     def post(self):
         pass
 
-#Creating a class based view
+# Creating a class based view
+
+
 class GeneratePdf(View):
-     def get(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
+        pdf = self.getPdf(request)
+
+        # rendering the template
+        return HttpResponse(pdf, content_type='application/pdf')
+    
+    def getPdf(self, request):
         data = Salary.objects.get(pk=request.GET['id'])
-        print('---------------')
-        print(data.employee.first_Name)
-        data.salaryMonth = calendar.month_name[int(data.workingDay.month)] + ' ' + str(data.workingDay.year)
+        data.salaryMonth = calendar.month_name[int(
+            data.workingDay.month)] + ' ' + str(data.workingDay.year)
         data.totalSalaryWithoutTax = data.employee.gross_Salary
         data.totalTax = data.employee.tax + data.employee.provident_Fund
         data.totalNetPay = data.salary
-        open('pay/templates/temp.html', "w").write(render_to_string('result.html', {'data': data}))
+        open('pay/templates/temp.html',
+             "w").write(render_to_string('result.html', {'data': data}))
 
         # Converting the HTML template into a PDF file
         pdf = html_to_pdf('temp.html')
-         
-         # rendering the template
-        return HttpResponse(pdf, content_type='application/pdf')
-# Create your views here.
 
+        return pdf
+
+class sendEmail(View):
+    def get(self, request):
+        data = Salary.objects.get(pk=request.GET['id'])
+        data.salaryMonth = calendar.month_name[int(
+            data.workingDay.month)] + ' ' + str(data.workingDay.year)
+
+        pdf = GeneratePdf.getPdf(self, request)
+        # creates SMTP session
+        mail = smtplib.SMTP('smtp.office365.com', 587)
+        # start TLS for security
+        mail.starttls()
+        # content = "PFA Salary Slip OF Bhavesh Khandelwal - "
+        msg = EmailMultiAlternatives(
+            'Salary Slip of ' + data.salaryMonth,
+            'PFA Salary Slip of ' + data.salaryMonth,
+            'bhavesh.khandelwal@indiraicem.ac.in',
+            [data.employee.email_Address])
+        # msg.attach_file(pdf.content)
+        msg.attach('invoice.pdf', pdf.content)
+        mail.login("bhavesh.khandelwal@indiraicem.ac.in", "Xox25042")
+
+        msg.send()
+        print("email send successfully")
+        return HttpResponse("Send Successfully")
+        # Create your views here.

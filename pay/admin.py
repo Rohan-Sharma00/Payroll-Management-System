@@ -121,12 +121,14 @@ class EmployeeAdmin(admin.ModelAdmin):
 
 class SalaryAdmin(admin.ModelAdmin):
     list_display = ['employee', 'workingDay', 'total_Salary_Days',
-                    'per_Day_Salary', 'salary', 'salary_slip']
+                    'per_Day_Salary', 'salary', 'salary_slip','sent_salary_slip']
     list_filter = ['workingDay', 'employee']
 
     def salary_slip(self, obj):
         return format_html(f'<a href="/pdf/?id={obj.id}" class=default"><b>Print</b></a>')
 
+    def sent_salary_slip(self, obj):
+        return format_html(f'<a href="/send/?id={obj.id}" class=default"><b>Sent To Email</b></a>')
 
 class workingMonthAdmin(admin.ModelAdmin):
     list_display = ['month', 'year',

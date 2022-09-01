@@ -138,4 +138,4 @@ EMAIL_PORT = '587'
 EMAIL_HOST_USER = 'bhavesh.khandelwal@indiraicem.ac.in'  
 EMAIL_HOST_PASSWORD = 'Xox25042' 
 EMAIL_USE_TLS = True 
-EMAIL_USE_SSL = True 
+EMAIL_USE_SSL = False 

@@ -7,9 +7,9 @@ from django.core.mail import send_mail
 s = smtplib.SMTP('smtp.office365.com', 587)
 # start TLS for security
 s.starttls()
-a = "email from python code"
+a = "PFA Salary Slip OF Bhavesh Khandelwal"
 msg = EmailMessage()
-msg['Subject'] = 'python mail'
+msg['Subject'] = 'Salary Slip'
 msg['From'] = 'bhavesh.khandelwal@indiraicem.ac.in'
 msg['To'] = 'khandelwal.bhavesh0@gmail.com'
 msg.set_content(a)

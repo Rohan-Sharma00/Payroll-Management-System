@@ -10,7 +10,6 @@ from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 
 
-
 # Create your models here.
 
 class Employee(models.Model):
@@ -20,11 +19,15 @@ class Employee(models.Model):
     last_Name = models.CharField(max_length=10)
     email_Address = models.EmailField(null=True, unique=True,)
     # Validate Phone Number With Regex.
-    contact_Number_Regex = RegexValidator(r'^[789]\d{9}$', 'Enter Valid Number')
-    contact_Number = models.PositiveIntegerField(null=True, unique=True, validators=[contact_Number_Regex])
+    contact_Number_Regex = RegexValidator(
+        r'^[789]\d{9}$', 'Enter Valid Number')
+    contact_Number = models.PositiveIntegerField(
+        null=True, unique=True, validators=[contact_Number_Regex])
     # Validate Pan Number With Regex.
-    pan_Number_Regex = RegexValidator(r'^[A-Z]{5}[0-9]{4}[A-Z]{1}$', 'Enter Valid Pan Number')  
-    pAN_Number = models.CharField(null=True, max_length=10, unique=True, validators=[pan_Number_Regex])
+    pan_Number_Regex = RegexValidator(
+        r'^[A-Z]{5}[0-9]{4}[A-Z]{1}$', 'Enter Valid Pan Number')
+    pAN_Number = models.CharField(
+        null=True, max_length=10, unique=True, validators=[pan_Number_Regex])
     bank_Name = models.CharField(null=True, max_length=25)
     account_Number = models.CharField(null=True, max_length=18)
     house_Rent_Allowance = models.IntegerField(null=True)
@@ -132,8 +135,7 @@ class WorkingMonth(models.Model, object):
 
     def save(self, *args, **kwargs):
         self.days_In_Month = gen_days(int(self.year), int(self.month))
-        self.paidOff = gen_paid_off(
-            self.work_Days_In_Month, self.days_In_Month)
+        self.paidOff = gen_paid_off(self.work_Days_In_Month, self.days_In_Month)
         print(self.days_In_Month)
         return super(WorkingMonth, self).save(*args, **kwargs)
 
@@ -157,7 +159,7 @@ class Salary(models.Model):
         print("--------------------")
 
         result = Attendance.objects.raw(
-            "select id, strftime('%Y-%m', logout_Time) year_month, sum(actual_Work_Days) actual_Work_Days from pay_attendance where year_month = '2022-07' and employee_id=" + str(self.employee.id) + " group by year_month")[0]
+            "select id, strftime('%Y-%m', logout_Time) year_month, sum(actual_Work_Days) actual_Work_Days from pay_attendance where year_month = '2022-09' and employee_id=" + str(self.employee.id) + " group by year_month")[0]
         print(result.year_month)
         # print(result)
         print(result.actual_Work_Days)
