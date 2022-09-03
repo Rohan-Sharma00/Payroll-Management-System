@@ -1,13 +1,17 @@
 from calendar import month
+from distutils.log import error
 from re import S, T
 from this import s
 from urllib import request
+from webbrowser import Error
 from django.db import models
 import calendar
 from datetime import datetime
 from django.db.models.query_utils import DeferredAttribute
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
+from rest_framework import status
+from rest_framework.response import Response
 
 
 # Create your models here.
@@ -153,40 +157,27 @@ class Salary(models.Model):
         return self.employee.first_Name + ' ' + self.employee.last_Name
 
     def save(self, *args, **kwargs):
-        salaryMonth = self.workingDay.year + '-' + self.workingDay.month
-        print("--------------------")
-        print(salaryMonth)
-        print("--------------------")
-
+        salaryMonth = str(self.workingDay.year) + '-' + str(self.workingDay.month)
         result = Attendance.objects.raw(
-            "select id, strftime('%Y-%m', logout_Time) year_month, sum(actual_Work_Days) actual_Work_Days from pay_attendance where year_month = '2022-09' and employee_id=" + str(self.employee.id) + " group by year_month")[0]
-        print(result.year_month)
-        # print(result)
-        print(result.actual_Work_Days)
-        # Show Total Salary Days
-        workdayObj = self.workingDay.id
-        print(workdayObj)
-        r = result.actual_Work_Days
-        p = self.workingDay.paidOff
-        sum = r + p
-        print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
-        print(r)
-        print(p)
-        print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
-        self.total_Salary_Days = sum
-        # # Show Salary Per Day
-        grosSalary = self.employee.gross_Salary
-        print('----------------------------')
-        print(grosSalary)
-        print(self.total_Salary_Days)
-        dayInMonth = self.workingDay.days_In_Month
-        self.per_Day_Salary = grosSalary / dayInMonth
-        print(self.per_Day_Salary)
-        # # Show Total Salary
-        self.salary = (self.total_Salary_Days * self.per_Day_Salary) - \
-            self.employee.tax - self.employee.provident_Fund
-        # print(obj.paidOff)
-        # self.total_Salary_Days = result + obj
-        # print(self.total_Salary_Days)
+            "select id, strftime('%Y-%m', logout_Time) year_month, sum(actual_Work_Days) actual_Work_Days from pay_attendance where year_month = '" + str(salaryMonth) + "' and employee_id=" + str(self.employee.id) + " group by year_month")
 
-        return super(Salary, self).save(*args, **kwargs)
+        if result:
+            result = result[0]
+            # Show Total Salary Days
+            workday = result.actual_Work_Days
+            paidof = self.workingDay.paidOff
+            sum = workday + paidof
+            self.total_Salary_Days = sum
+            # Show Salary Per Day
+            grosSalary = self.employee.gross_Salary
+            dayInMonth = self.workingDay.days_In_Month
+            self.per_Day_Salary = grosSalary / dayInMonth
+            # # Show Total Salary
+            self.salary = (self.total_Salary_Days * self.per_Day_Salary) - \
+                self.employee.tax - self.employee.provident_Fund
+            return super(Salary, self).save(*args, **kwargs)
+        else:
+            return Response(
+                {"detail": "Unable to read file."}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )

@@ -6,7 +6,6 @@ from django.contrib import admin
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import path, reverse
-from django.shortcuts import render
 from . models import Employee, Salary, WorkingMonth
 from . models import Attendance
 from django import forms

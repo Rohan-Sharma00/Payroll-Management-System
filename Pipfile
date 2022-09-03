@@ -14,6 +14,7 @@ qrcode = "*"
 numpy = "*"
 django-jazzmin = "*"
 secure-smtplib = "*"
+django-admin-volt = "*"
 
 [dev-packages]
 autopep8 = "*"
