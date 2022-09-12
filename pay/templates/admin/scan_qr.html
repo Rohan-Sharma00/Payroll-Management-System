@@ -1,6 +1,7 @@
 {% extends 'admin/base_site.html' %}
 {% load static %}
 {% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="{% static '/html5-qrcode.min.js' %}"></script>
 <style>
   .result {
@@ -33,8 +34,10 @@
 
 
 <script type="text/javascript">
+  window.CSRF_TOKEN = "{{ csrf_token }}";
   function onScanSuccess(qrCodeMessage) {
     document.getElementById('result').innerHTML = '<span class="result">' + qrCodeMessage + '</span>';
+    sendAttendanceData(qrCodeMessage);
   }
 
   function onScanError(errorMessage) {
@@ -45,5 +48,42 @@
     "reader", { fps: 10, qrbox: 250 });
   html5QrcodeScanner.render(onScanSuccess, onScanError);
 
+  function sendAttendanceData(empId) {
+    var currentdate = new Date(); 
+    var datetime = currentdate.getFullYear()  + "-" 
+                + (currentdate.getMonth()+1) + "-"
+                + currentdate.getDate() + " " 
+                + currentdate.getHours() + ":"  
+                + currentdate.getMinutes() + ":" 
+                + currentdate.getSeconds();
+
+    console.log(datetime)
+    
+    let attendanceData = {
+    "login_Time": datetime,
+    "logout_Time": datetime,
+    "employee": empId,
+    "csrfmiddlewaretoken": "{{ csrf_token }}"
+  };
+
+  $.ajax({
+    // points to the url where your data will be posted
+    url:'http://127.0.0.1:8000/attend/attendance/',
+    // post for security reason
+    type: "POST",
+    // data that you will like to return 
+    data: attendanceData,
+    // what to do when the call is success 
+    success:function(response){
+      alert("Data Has Been Send SuccessFully!");
+    },
+    // what to do when the call is complete ( you can right your clean from code here)
+    complete:function(){},
+    // what to do when there is an error
+    error:function (xhr, textStatus, thrownError){
+      alert("OOPS Something Went Wrong!");
+    }
+});
+}
 </script>
 {% endblock %}

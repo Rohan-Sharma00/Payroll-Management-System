@@ -7,5 +7,13 @@ from . models import Attendance
 class employeeSerializers(serializers.ModelSerializer):
     class Meta:
         model = Employee
-        # fields = ('firstname','lastname')
+        fields = ('first_Name','last_Name')
+        # fields = '__all__'
+
+class attendanceSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Attendance
+        # fields = ('employee', 'login_Time')
         fields = '__all__'
+
+

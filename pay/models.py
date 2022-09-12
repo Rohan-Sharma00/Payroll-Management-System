@@ -11,7 +11,7 @@ from django.db.models.query_utils import DeferredAttribute
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 from rest_framework import status
-from rest_framework.response import Response
+from django.core.exceptions import ValidationError
 
 
 # Create your models here.
@@ -78,7 +78,7 @@ class Attendance(models.Model):
 
 
 class Designation(models.Model):
-    title = models.CharField(max_length=15)
+    title = models.CharField(max_length=50)
     basic_Salary = models.PositiveIntegerField()
 
     def __str__(self):
@@ -108,6 +108,8 @@ YEAR_CHOICES = (
 )
 
 WORKING_CHOICES = (
+    (17, '17'),
+    (18, '18'),
     (19, '19'),
     (20, '20'),
     (21, '21'),
@@ -177,7 +179,4 @@ class Salary(models.Model):
                 self.employee.tax - self.employee.provident_Fund
             return super(Salary, self).save(*args, **kwargs)
         else:
-            return Response(
-                {"detail": "Unable to read file."}, 
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            raise ValidationError('INVALID SELECTED MONTH')

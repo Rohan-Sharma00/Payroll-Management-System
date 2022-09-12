@@ -1,5 +1,10 @@
+from asyncio.windows_events import NULL
 import calendar
+from contextlib import nullcontext
+import datetime
 from email import message
+from sqlite3 import SQLITE_SELECT
+from urllib import request
 from django.shortcuts import render
 import smtplib
 from email.message import EmailMessage
@@ -10,9 +15,10 @@ from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from . models import Employee
+from . models import Attendance, Employee
 from . models import Salary
 from . serializers import employeeSerializers
+from . serializers import attendanceSerializers
 # Added new lib from here
 from django.views.generic import View
 from .process import html_to_pdf
@@ -23,6 +29,7 @@ from io import BytesIO
 from django.template.loader import get_template
 from xhtml2pdf import pisa
 from django.core.mail import EmailMultiAlternatives
+from rest_framework import viewsets
 
 
 class employeeList(APIView):
@@ -32,11 +39,30 @@ class employeeList(APIView):
         serializer = employeeSerializers(employees, many=True)
         return Response(serializer.data)
 
-    def post(self):
+    def post(self, request):
         pass
 
-# Creating a class based view
+class AttendanceViewSet(viewsets.ModelViewSet):
+    queryset = Attendance.objects.all()
+    serializer_class = attendanceSerializers
 
+    def create(self, request):
+        id = request.POST.get('employee')
+        loginTime = request.POST.get('login_Time')
+        logoutTime = request.POST.get('logout_Time')
+        print("------------------------")
+        print(id)
+        print(loginTime)
+        print(logoutTime)
+        print("------------------------")
+        res = Attendance.objects.filter(pk = id).update(logout_Time = '2020-9-9 10:15:50')
+        print(res)
+        print(Attendance.objects.filter(pk = id).update(logout_Time = '2022-8-8 10:15:50'))
+        # result = Attendance.objects.raw("SELECT employee_id FROM pay_attendance WHERE id='147' ")
+        # self.perform_update(result)
+        # # self.serializer_class.save()
+        # print(result)
+        return HttpResponse("Success")
 
 class GeneratePdf(View):
     def get(self, request, *args, **kwargs):
@@ -83,5 +109,5 @@ class sendEmail(View):
 
         msg.send()
         print("email send successfully")
-        return HttpResponse("Send Successfully")
-        # Create your views here.
+        return render(request, "admin/sendEmailSuccess.html")
+    # Create your views here.
