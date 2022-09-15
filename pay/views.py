@@ -9,7 +9,8 @@ from django.shortcuts import render
 import smtplib
 from email.message import EmailMessage
 from django.core.mail import send_mail
-
+from datetime import datetime
+from datetime import date
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
@@ -30,6 +31,11 @@ from django.template.loader import get_template
 from xhtml2pdf import pisa
 from django.core.mail import EmailMultiAlternatives
 from rest_framework import viewsets
+import sqlite3
+from sqlite3 import Error
+from .create import check as check
+
+
 
 
 class employeeList(APIView):
@@ -62,6 +68,8 @@ class AttendanceViewSet(viewsets.ModelViewSet):
         # self.perform_update(result)
         # # self.serializer_class.save()
         # print(result)
+        check(id)
+
         return HttpResponse("Success")
 
 class GeneratePdf(View):

@@ -4,3 +4,6 @@ step 1 : PS D:\Work\Project\Sem II\Python Project\PayRoll_Management_System> pip
 step 2 : pipenv install
 step 3 : python manage.py migrate 
 step 4 : python manage.py runserver
+
+step 5: in pay in create.py update the mysqlite database path
+        in given format
