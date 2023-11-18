@@ -29,11 +29,11 @@ def check(eid):
         if(row[1]!="" and row[2]==""):
 
                 print("call update")
-
+                update(eid)
         elif(row[1]!="" and row[2]!=""):
                 print("////////////")
                 print("attendance cannot accepted")
-
+                break
 
         print("call insert")
         break
