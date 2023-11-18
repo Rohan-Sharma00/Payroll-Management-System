@@ -1,4 +1,4 @@
 #from .create import create1 as insert
 import create
 
-create.check(19)
+create.insert(20)

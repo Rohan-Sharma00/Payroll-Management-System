@@ -29,23 +29,12 @@ from django.template import loader
 from io import BytesIO
 from django.template.loader import get_template
 from xhtml2pdf import pisa
-from xhtml2pdf import pisa
 from django.core.mail import EmailMultiAlternatives
 from rest_framework import viewsets
 import sqlite3
 from sqlite3 import Error
 from .create import check as check
 
-import sqlite3
-from datetime import datetime
-from datetime import date
-
-
-
-global c
-# refer following path
-# c= r"C:\\Users\\Rohan\\Desktop\\mainproject\\PayRoll_Management_System\\db.sqlite3"
-c= r"C:\\Users\\Rohan\\Desktop\\mainproject\\PayRoll_Management_System\\db.sqlite3"
 
 
 
@@ -130,4 +119,3 @@ class sendEmail(View):
         print("email send successfully")
         return render(request, "admin/sendEmailSuccess.html")
     # Create your views here.
-
